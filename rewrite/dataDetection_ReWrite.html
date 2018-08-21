@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>封装数据监测方法</title>
+</head>
+<body>
+<script>
+
+    (function () {
+        var obj = {
+            isNumber:"Number",
+            isString:"String",
+            isBoolean:"Boolean",
+            isNull:"Null",
+            isUndefined:"Undefined",
+            isObject:"Object",
+            isFunction:"Function"
+        }
+        var checkType = {};
+        for (var key in obj) {
+            checkType[key] = (function () {
+                var curType = obj[key];
+                var reg = new RegExp("\\[object "+curType+"\\]");
+                console.log(reg);
+                return function (val) {
+                    //在正则中出现变量只能用构造函数的方式，不能用字面量的方式
+                    //var reg = /\[object curType\]/;
+                    return reg.test(Object.prototype.toString.call(val));
+                }
+            })();
+        }
+        window.checkType = checkType;
+    })();
+    console.log(checkType.isNumber(11));
+    console.log(checkType.isObject({}));
+
+    console.log(checkType.isNumber([]));
+    console.log(checkType.isBoolean(true));
+</script>
+</body>
+</html>

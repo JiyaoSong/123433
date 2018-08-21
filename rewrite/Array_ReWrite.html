@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数组方法重写练习</title>
+</head>
+<body>
+<script>
+
+    var ary = [0,1,2,3,4,5,6,7,8,9];
+    //1、push重写
+    Array.prototype.myPush = function () {
+        for(var i = 0;i<arguments.length;i++){
+            this[this.length] = arguments[i];
+        }
+        return this.length;
+    }
+    //console.log(ary.myPush(1,2,3));
+
+    //2、pop重写
+    Array.prototype.myPop = function () {
+        var last = ary[ary.length-1];
+        this.length--;
+        return last;
+    }
+    //console.log(ary.myPop());
+
+    //3、unshift重写
+    Array.prototype.myUnshift = function () {
+        var aLen = arguments.length;
+        var thisLen = this.length;
+        for (var i = (aLen+thisLen-1); i>=0; i--) {
+            if(i===(aLen-1)){
+                this[i] = arguments[--aLen];
+                continue;
+            }
+            this[i] = this[i-aLen];
+        }
+        return this.length;
+    };
+    //console.log(ary.myUnshift());
+
+    //4、shift重写
+    Array.prototype.myShift = function () {
+        var first = this[0];
+        for (var i = 0; i<this.length; i++) {
+            this[i] = this[i+1];
+            if(i===this.length-2){
+                this.length--;
+                break;
+            }
+        }
+        return first;
+    };
+    //console.log(ary.myShift());
+
+    //5、slice重写
+    var ary = [0,1,2,3,4,5,6,7,8,9];
+    Array.prototype.mySlice = function (m,n) {
+        m = m||0;
+        n = n>=this.length||!n?this.length:n;
+        m += m<0?this.length:null;
+        n += n<0?this.length:null;
+        var newAry = [];
+        for (var i = m; i < n; i++) {
+            newAry[i-m] = this[i];
+        }
+        return newAry;
+    };
+    //console.log(ary.mySlice(2));
+
+    //6、indexOf重写
+    Array.prototype.myIndexOf = function () {
+        for (var i = 0; i<this.length; i++) {
+            if(arguments[0]===this[i]){
+                return i;
+            }
+        }
+        return -1;
+    }
+    //console.log(ary.myIndexOf(2));
+
+    //7、revarse重写
+    Array.prototype.myReverse = function () {
+        var temp = 0;
+        for (var i = 0,j = this.length-1; i<=this.length/2&&j>=this.length/2; i++,j--) {
+            temp = this[j];
+            this[j] = this[i];
+            this[i] = temp;
+        }
+        return this;
+    };
+    //console.log(ary.myReverse());
+
+    //8、concat重写
+    //var ary1 = [100,200,300];
+    Array.prototype.myConcat = function () {
+        var newAry = [];
+        var j = 0;
+        for (var i = 0; j<arguments.length; i++) {
+            if(i>=this.length){
+                if(arguments[j] instanceof Array){
+                    for (var k = 0; k < arguments[j].length; ++k,i++) {
+                        newAry[i] = arguments[j][k];
+                        if(k==arguments[j].length-1){
+                            break;
+                        }
+                    }
+                }else {
+                    newAry[i] = arguments[j];
+                }
+                j++;
+            }else {
+                newAry[i] = this[i];
+            }
+        }
+        return newAry;
+    };
+    //console.log([].myConcat(200,ary,ary1));
+
+    //9、join拼接字符串
+    Array.prototype.myJoin = function (attr) {
+        if(!attr){
+            attr = ",";
+        }
+        var newAry="";
+        for (var i = 0; i < this.length; i++) {
+            newAry += this[i];
+            if(i===this.length-1){
+                break;
+            }
+            newAry += attr;
+        }
+        return newAry;
+    };
+    //console.log(ary.myJoin());
+
+    //10、splice截取删除新增
+    Array.prototype.mySplice = function (m,n) {
+        n = n>=this.length?this.length-m:n;
+        m += m<0?this.length:null;
+        if(m===undefined||n<0||m>this.length){
+            return [];
+        }
+        m = m<0||!Number(m)?0:m;
+        var newAry = [];
+        var last = [];
+        for (var i = m; i < this.length; i++) {
+            i>=(m+n)?last[i-m-n] = this[i]:newAry[i-m] = this[i];
+        }
+        var j = 2;
+        this.length = m;
+        for (var i = m; i < (m+arguments.length+last.length-2); i++) {
+            if(i>=(m+arguments.length-2)){
+                this[i] = last[i-m-j+2];
+            }else{
+                this[i] = arguments[j++];
+            }
+        }
+        return newAry;
+    };
+    //console.log(ary.mySplice(2, 5, 100, 200));
+    //console.log(ary.mySplice(-2,0,100));
+    //console.log(ary);
+
+
+    //11、foreach遍历数组
+    Array.prototype.myForEach = function (a,b) {
+        for (var i = 0; i < this.length; i++) {
+            a.call(b,this[i],i);
+        }
+    };
+
+    //12、map遍历数组
+    Array.prototype.myMap = function (a,b) {
+        var value = [];
+        for (var i = 0; i < this.length; i++) {
+            a.call(b,this[i],i);
+            value[i] = a();
+        }
+        return value;
+    };
+    /*console.log(ary.myMap(function (a, b) {
+        return 1;
+    }));*/
+
+</script>
+</body>
+</html>
