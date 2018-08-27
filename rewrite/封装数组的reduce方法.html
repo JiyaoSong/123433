@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>练习</title>
+</head>
+<body>
+<script>
+    /*Array.prototype.myEvery = function (fn) {
+       for(let i = 0;i<this.length;i++){
+           if(!fn(this[i],i)){
+               return false;
+           }
+       }
+       return true;
+   };
+   console.log(ary.myEvery((item, index) => {
+       return item > 3;
+   }));*/
+
+/*
+    let ary = [2,6,8,12,10];
+    let sum = ary.reduce((prev,next)=>{
+        console.log(prev, next);
+        return prev+next;
+    },2);
+    console.log(sum);
+    console.log("+++++++++++++");
+    let a = ary.reduce((prev,next)=>{
+        console.log(prev, next);
+        return prev+next;
+    },2);
+    console.log(a);*/
+
+    Array.prototype.myReduce = function(fn,first){
+        let result = first?first:0;
+        for(let i = 0;i<this.length;i++){
+            result = fn(result,this[i]);
+        }
+        return result;
+    };
+
+    let arr = [{price:10,count:2},{price:66,count:3},{price:99,count:5}];
+    let  mn =  arr.reduce((prev,next)=>{
+        console.log(prev,next);
+        return prev+next.price*next.count;
+    },0);
+    console.log(mn);
+    console.log("+++++++++++++");
+    let b = arr.myReduce((prev,next)=>{
+        console.log(prev,next);
+        return prev+next.price*next.count;
+    },0);
+    console.log(b);
+
+
+</script>
+</body>
+</html>
